@@ -1,5 +1,12 @@
-# bot.py
+# -*- coding: utf-8 -*-
+from dotenv import load_dotenv
+load_dotenv()
+
 import os
+
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+import pytz
+
 import logging
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import (
@@ -17,6 +24,8 @@ logger = logging.getLogger(__name__)
 
 # Token from environment
 TOKEN = os.environ.get("BOT_TOKEN")
+tz = pytz.timezone('Europe/Moscow')
+
 if not TOKEN:
     logger.error("BOT_TOKEN environment variable is not set. Exiting.")
     raise SystemExit("BOT_TOKEN not set")
@@ -87,7 +96,11 @@ async def command3(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("CareerLab — навигатор в мир международной карьеры... (см. описание)")
 
 def main():
+
+    tz = pytz.timezone('Europe/Moscow')
+    scheduler = AsyncIOScheduler(timezone=tz)
     app = ApplicationBuilder().token(TOKEN).build()
+    app.job_queue.scheduler = scheduler
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
