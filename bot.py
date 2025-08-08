@@ -3,10 +3,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import os
-
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import pytz
-
 import logging
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import (
@@ -33,14 +31,29 @@ if not TOKEN:
 menu_options = ['Paypal', 'Kaspi', 'Zelle', 'Перевод']
 
 messages = {
-    'Paypal': "Для оплаты с помощью Paypal, отправьте платеж на номер: 7735950933. Как только вы это сделаете, отправьте скриншот в этот чат. При оплате, пожалуйста, укажите в сообщении ваш тег Telegram.",
-    'Kaspi': "Для оплаты с помощью Kaspi, отправьте платеж на номер: KIRILL FINANCE. Как только вы это сделаете, отправьте скриншот в этот чат. При оплате, пожалуйста, укажите в сообщении ваш тег Telegram.",
-    'Zelle': "Для оплаты с помощью Zelle, отправьте платеж на номер: 7735950933. Как только вы это сделаете, отправьте скриншот в этот чат. При оплате, пожалуйста, укажите в сообщении ваш тег Telegram.",
-    'Перевод': "Для оплаты переводом, отправьте платеж на номер: \n
-       " 4276380162792514 (Сбербанк), \n"
-       " Наталия Александровна Волкова, \n"
-       " 89150648677 \n"
-       " Как только вы это сделаете, отправьте скриншот в этот чат. При оплате, пожалуйста, укажите в сообщении ваш тег Telegram. \n "
+    'Paypal': (
+        "Для оплаты с помощью Paypal, отправьте платеж на номер: 7735950933. "
+        "Как только вы это сделаете, отправьте скриншот в этот чат. "
+        "При оплате, пожалуйста, укажите в сообщении ваш тег Telegram."
+    ),
+    'Kaspi': (
+        "Для оплаты с помощью Kaspi, отправьте платеж на номер: KIRILL FINANCE. "
+        "Как только вы это сделаете, отправьте скриншот в этот чат. "
+        "При оплате, пожалуйста, укажите в сообщении ваш тег Telegram."
+    ),
+    'Zelle': (
+        "Для оплаты с помощью Zelle, отправьте платеж на номер: 7735950933. "
+        "Как только вы это сделаете, отправьте скриншот в этот чат. "
+        "При оплате, пожалуйста, укажите в сообщении ваш тег Telegram."
+    ),
+    'Перевод': (
+        "Для оплаты переводом, отправьте платеж на номер:\n"
+        " 4276380162792514 (Сбербанк),\n"
+        " Наталия Александровна Волкова,\n"
+        " 89150648677\n"
+        "Как только вы это сделаете, отправьте скриншот в этот чат. "
+        "При оплате, пожалуйста, укажите в сообщении ваш тег Telegram."
+    )
 }
 
 MODERATOR_CHAT_IDS = [5671154512, 391193896]
@@ -81,34 +94,48 @@ async def photo_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     for mod_id in MODERATOR_CHAT_IDS:
         with open(file_path, 'rb') as photo:
-            await context.bot.send_photo(chat_id=mod_id, photo=photo,
-                                         caption=f"Photo from @{user.username or user.first_name} (ID: {user.id})")
+            await context.bot.send_photo(
+                chat_id=mod_id,
+                photo=photo,
+                caption=f"Photo from @{user.username or user.first_name} (ID: {user.id})"
+            )
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Команды бота:\n/start — начать\n/help — помощь\n/info — информация о Career Lab")
+    await update.message.reply_text(
+        "Команды бота:\n"
+        "/start — начать\n"
+        "/help — помощь\n"
+        "/info — информация о Career Lab"
+    )
 
 async def info_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Career Lab — это профессиональное коммьюнити для студентов и молодых специалистов. Чтобы присоединиться, Вам необходимо выбрать тариф (базовый или pro), и произвести оплату.")
+    await update.message.reply_text(
+        "Career Lab — это профессиональное коммьюнити для студентов и молодых специалистов. "
+        "Чтобы присоединиться, Вам необходимо выбрать тариф (базовый или pro), и произвести оплату."
+    )
 
 async def career_lab(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Этот тариф даёт вам:\n" 
-    " - Доступ к 4-недельному курсу Career Lab (4 модуля: выбор карьеры, составление резюме, networking, deep dive в финансы/консалтинг\n)"
-    " - Zoom-разбор с нами (мы — Лиза, Кирилл и Даша)\n"
-    " - Приглашенные спикеры из индустрии (финансы, консалтинг, Big4, ООН, стартапы и не только)/n")
-    " - Приглашение в закрытое Community после завершения курса\n"
+    await update.message.reply_text(
+        "Этот тариф даёт вам:\n"
+        " - Доступ к 4-недельному курсу Career Lab (4 модуля: выбор карьеры, составление резюме, networking, deep dive в финансы/консалтинг)\n"
+        " - Zoom-разбор с нами (мы — Лиза, Кирилл и Даша)\n"
+        " - Приглашенные спикеры из индустрии (финансы, консалтинг, Big4, ООН, стартапы и не только)\n"
+        " - Приглашение в закрытое Community после завершения курса\n"
+    )
 
 async def career_lab_pro(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Career Lab Pro, помимо базового 4-недельного курса, включает в себя: \n"
-    " - Групповые звонки по подготовке к интервью (финансы, консалтинг, поведенческие)  \n"
-    " – Практика кейсов и технических вопросов \n"
+    await update.message.reply_text(
+        "Career Lab Pro, помимо базового 4-недельного курса, включает в себя:\n"
+        " - Групповые звонки по подготовке к интервью (финансы, консалтинг, поведенческие)\n"
+        " - Практика кейсов и технических вопросов\n"
     )
 
 async def command3(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("CareerLab — навигатор в мир международной карьеры... (см. описание)")
+    await update.message.reply_text(
+        "CareerLab — навигатор в мир международной карьеры... (см. описание)"
+    )
 
 def main():
-
-    tz = pytz.timezone('Europe/Moscow')
     scheduler = AsyncIOScheduler(timezone=tz)
     app = ApplicationBuilder().token(TOKEN).build()
     app.job_queue.scheduler = scheduler
