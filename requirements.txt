@@ -1,3 +1,4 @@
-python-telegram-bot>=20.0
-Flask==2.2.5       # optional if you want a keep-alive web server (see below)
-python-dotenv      # optional, helpful for local testing
+python-telegram-bot==20.3
+apscheduler==3.6.3
+pytz==2025.2
+python-dotenv==1.0.0
